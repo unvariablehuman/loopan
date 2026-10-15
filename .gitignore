@@ -30,3 +30,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local agent/task scratch and tooling — not part of the app
+.agents/
+.lovable/
+.venv/

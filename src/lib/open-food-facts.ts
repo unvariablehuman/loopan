@@ -22,7 +22,7 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
       { signal: signal ?? null },
     );
     if (res.status === 404) return { status: "not_found" };
-    if (!res.ok) return { status: "error", message: `Lookup failed (${res.status})` };
+    if (!res.ok) return { status: "error", message: `Pencarian gagal (${res.status})` };
     const j = (await res.json()) as { status?: number; product?: Record<string, unknown> };
     if (j.status !== 1 || !j.product) return { status: "not_found" };
     const p = j.product;
@@ -39,6 +39,6 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
     return { status: "found", product };
   } catch (e) {
     if ((e as Error).name === "AbortError") throw e;
-    return { status: "error", message: "Couldn’t reach Open Food Facts. Check your connection." };
+    return { status: "error", message: "Tidak dapat menghubungi Open Food Facts. Periksa koneksimu." };
   }
 }

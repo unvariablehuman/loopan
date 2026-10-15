@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CookRouteImport } from './routes/cook'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as PantryRouteImport } from './routes/pantry'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -18,6 +19,11 @@ import { Route as UseFirstRouteImport } from './routes/use-first'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CookRoute = CookRouteImport.update({
+  id: '/cook',
+  path: '/cook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsightsRoute = InsightsRouteImport.update({
@@ -43,6 +49,7 @@ const UseFirstRoute = UseFirstRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cook': typeof CookRoute
   '/insights': typeof InsightsRoute
   '/pantry': typeof PantryRoute
   '/settings': typeof SettingsRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cook': typeof CookRoute
   '/insights': typeof InsightsRoute
   '/pantry': typeof PantryRoute
   '/settings': typeof SettingsRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cook': typeof CookRoute
   '/insights': typeof InsightsRoute
   '/pantry': typeof PantryRoute
   '/settings': typeof SettingsRoute
@@ -65,14 +74,23 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/insights' | '/pantry' | '/settings' | '/use-first'
+  fullPaths:
+    '/' | '/cook' | '/insights' | '/pantry' | '/settings' | '/use-first'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/insights' | '/pantry' | '/settings' | '/use-first'
-  id: '__root__' | '/' | '/insights' | '/pantry' | '/settings' | '/use-first'
+  to: '/' | '/cook' | '/insights' | '/pantry' | '/settings' | '/use-first'
+  id:
+    | '__root__'
+    | '/'
+    | '/cook'
+    | '/insights'
+    | '/pantry'
+    | '/settings'
+    | '/use-first'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CookRoute: typeof CookRoute
   InsightsRoute: typeof InsightsRoute
   PantryRoute: typeof PantryRoute
   SettingsRoute: typeof SettingsRoute
@@ -86,6 +104,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cook': {
+      id: '/cook'
+      path: '/cook'
+      fullPath: '/cook'
+      preLoaderRoute: typeof CookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insights': {
@@ -121,6 +146,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CookRoute: CookRoute,
   InsightsRoute: InsightsRoute,
   PantryRoute: PantryRoute,
   SettingsRoute: SettingsRoute,

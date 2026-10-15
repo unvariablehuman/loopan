@@ -38,8 +38,8 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
         confirm({
           barcode: code,
           notice: r.status === "not_found"
-            ? { tone: "warn", text: "Product not found in Open Food Facts. Enter the details manually — your scanned barcode is kept." }
-            : { tone: "warn", text: `${r.message} Enter the details manually — your scanned barcode is kept.` },
+            ? { tone: "warn", text: "Produk tidak ditemukan di Open Food Facts. Masukkan detailnya secara manual — barcode hasil pindai tetap disimpan." }
+            : { tone: "warn", text: `${r.message} Masukkan detailnya secara manual — barcode hasil pindai tetap disimpan.` },
         });
       }
     } catch {
@@ -51,7 +51,7 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
     let cancelled = false;
     (async () => {
       if (!navigator.mediaDevices?.getUserMedia) {
-        setPhase({ k: "camera_error", msg: "This browser doesn’t support camera access." });
+        setPhase({ k: "camera_error", msg: "Browser ini tidak mendukung akses kamera." });
         return;
       }
       try {
@@ -75,10 +75,10 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
         const name = (e as Error).name;
         setPhase({
           k: "camera_error",
-          msg: name === "NotAllowedError" || name === "SecurityError" ? "Camera permission was denied. Allow camera access in your browser settings, or enter the barcode below."
-            : name === "NotFoundError" || name === "OverconstrainedError" ? "No camera was found on this device."
-            : name === "NotReadableError" || name === "AbortError" ? "The camera is being used by another app. Close it and try again, or enter the barcode below."
-            : "The camera couldn’t be started. Enter the barcode below instead.",
+          msg: name === "NotAllowedError" || name === "SecurityError" ? "Izin kamera ditolak. Aktifkan akses kamera di pengaturan browser, atau masukkan barcode di bawah."
+            : name === "NotFoundError" || name === "OverconstrainedError" ? "Tidak ada kamera yang ditemukan di perangkat ini."
+            : name === "NotReadableError" || name === "AbortError" ? "Kamera sedang digunakan aplikasi lain. Tutup aplikasi itu lalu coba lagi, atau masukkan barcode di bawah."
+            : "Kamera tidak dapat dijalankan. Masukkan barcode di bawah saja.",
         });
       }
     })();
@@ -95,11 +95,11 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
           <div className="flex items-center gap-3">
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-mint text-primary"><ScanBarcode className="h-5 w-5" /></span>
             <div>
-              <h2 id="bc-title" className="text-lg font-semibold">Scan barcode</h2>
-              <p className="text-xs text-muted-foreground">Hold the barcode inside the frame.</p>
+              <h2 id="bc-title" className="text-lg font-semibold">Pindai barcode</h2>
+              <p className="text-xs text-muted-foreground">Posisikan barcode di dalam bingkai.</p>
             </div>
           </div>
-          <button onClick={close} aria-label="Close" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
+          <button onClick={close} aria-label="Tutup" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
         </div>
 
         <div className="relative mt-5 aspect-[4/3] overflow-hidden rounded-xl bg-foreground">
@@ -115,7 +115,7 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
             <div className="absolute inset-0 grid place-items-center text-center text-sm text-primary-foreground">
               <div className="grid justify-items-center gap-2">
                 <Loader2 className="h-6 w-6 animate-spin" />
-                {lookingUp ? <>Looking up {phase.code}…</> : "Starting camera…"}
+                {lookingUp ? <>Mencari {phase.code}…</> : "Memulai kamera…"}
               </div>
             </div>
           )}
@@ -130,19 +130,19 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
           className="mt-5 grid gap-2"
           onSubmit={(e) => { e.preventDefault(); if (/^\d{6,14}$/.test(manual.trim())) void handleCode(manual.trim()); }}
         >
-          <label htmlFor="bc-manual" className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"><Keyboard className="h-3.5 w-3.5" />Or type the barcode number</label>
+          <label htmlFor="bc-manual" className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"><Keyboard className="h-3.5 w-3.5" />Atau ketik nomor barcode</label>
           <div className="flex gap-2">
-            <input id="bc-manual" inputMode="numeric" value={manual} onChange={(e) => setManual(e.target.value.replace(/\D/g, ""))} placeholder="e.g. 3017620422003" disabled={lookingUp}
+            <input id="bc-manual" inputMode="numeric" value={manual} onChange={(e) => setManual(e.target.value.replace(/\D/g, ""))} placeholder="mis. 3017620422003" disabled={lookingUp}
               className="h-10 min-w-0 flex-1 rounded-lg border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring/40" />
             <button type="submit" disabled={lookingUp || !/^\d{6,14}$/.test(manual)} className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-50">
-              <Barcode className="h-4 w-4" />Look up
+              <Barcode className="h-4 w-4" />Cari
             </button>
           </div>
         </form>
 
         <div className="mt-5 flex flex-wrap justify-between gap-2">
-          <button onClick={() => { stopRef.current(); confirm({ notice: { tone: "info", text: "Entering details manually." } }); }} disabled={lookingUp} className="rounded-full px-3 py-2 text-sm font-semibold text-primary hover:bg-mint disabled:opacity-50">Enter manually instead</button>
-          <button onClick={close} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Cancel</button>
+          <button onClick={() => { stopRef.current(); confirm({ notice: { tone: "info", text: "Memasukkan detail secara manual." } }); }} disabled={lookingUp} className="rounded-full px-3 py-2 text-sm font-semibold text-primary hover:bg-mint disabled:opacity-50">Masukkan manual saja</button>
+          <button onClick={close} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Batal</button>
         </div>
       </div>
     </div>

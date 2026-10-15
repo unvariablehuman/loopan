@@ -2,16 +2,17 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { AlertCircle, Barcode, CalendarClock, Info, Loader2, PackagePlus, Pencil, X } from "lucide-react";
 import { usePantry } from "./PantryContext";
-import { CATEGORIES, LOCATIONS, parseDate, type Category, type DateType, type Location } from "@/lib/pantry-data";
+import { categoryLabel, CATEGORIES, locationLabel, LOCATIONS, parseDate, type Category, type DateType, type Location } from "@/lib/pantry-data";
 
 const schema = z.object({
-  name: z.string().trim().min(1, "Enter a product name").max(80, "Keep it under 80 characters"),
+  name: z.string().trim().min(1, "Masukkan nama produk").max(80, "Maksimal 80 karakter"),
   category: z.enum(CATEGORIES),
-  quantity: z.string().trim().min(1, "Enter a quantity, e.g. 1 L or 6 pcs").max(30, "Keep it under 30 characters"),
+  quantity: z.string().trim().min(1, "Masukkan jumlah, mis. 1 L atau 6 pcs").max(30, "Maksimal 30 karakter"),
   location: z.enum(LOCATIONS),
-  expiresOn: z.string().refine((s) => parseDate(s) !== null, "Pick a valid date"),
+  expiresOn: z.string().refine((s) => parseDate(s) !== null, "Pilih tanggal yang valid"),
   dateType: z.enum(["use_by", "best_before"]),
-  price: z.string().trim().refine((s) => s === "" || (/^\d+(\.\d{1,2})?$/.test(s) && Number(s) <= 10000), "Use a number like 3.50"),
+  // Price is whole Rupiah (integer); empty is allowed since price is optional.
+  price: z.string().trim().refine((s) => s === "" || (/^\d+$/.test(s) && Number(s) <= 100000000), "Gunakan angka rupiah, mis. 15000"),
 });
 
 type Form = z.input<typeof schema>;
@@ -79,13 +80,13 @@ export function ItemEditor() {
               {isEdit ? <Pencil className="h-5 w-5" /> : prefill?.barcode ? <Barcode className="h-5 w-5" /> : prefill?.expiresOn ? <CalendarClock className="h-5 w-5" /> : <PackagePlus className="h-5 w-5" />}
             </span>
             <div>
-              <h2 id="editor-title" className="text-lg font-semibold">{isEdit ? "Edit item" : prefill ? "Confirm item" : "Add food item"}</h2>
+              <h2 id="editor-title" className="text-lg font-semibold">{isEdit ? "Ubah item" : prefill ? "Konfirmasi item" : "Tambahkan ke Dapur"}</h2>
               <p className="text-xs text-muted-foreground">
-                {prefill ? "Check the details before saving. Fields marked * are required." : "Fields marked * are required."}
+                {prefill ? "Periksa detail sebelum menyimpan. Kolom bertanda * wajib diisi." : "Kolom bertanda * wajib diisi."}
               </p>
             </div>
           </div>
-          <button type="button" onClick={close} aria-label="Close" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
+          <button type="button" onClick={close} aria-label="Tutup" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
         </div>
 
         {prefill?.notice && (
@@ -100,58 +101,60 @@ export function ItemEditor() {
             <div className="min-w-0 text-xs text-muted-foreground">
               {prefill.brand && <div className="truncate text-sm font-semibold text-foreground">{prefill.brand}</div>}
               {prefill.barcode && <div>Barcode {prefill.barcode}</div>}
-              {prefill.barcode && !prefill.notice && <div>Product info from Open Food Facts</div>}
+              {prefill.barcode && !prefill.notice && <div>Info produk dari Open Food Facts</div>}
             </div>
           </div>
         )}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-1.5 text-sm font-medium sm:col-span-2">Product name *
+          <label className="grid gap-1.5 text-sm font-medium sm:col-span-2">Nama produk *
             <input autoFocus value={form.name} onChange={(e) => set("name", e.target.value)} className={field} {...aria("name")} />
             <Err k="name" />
           </label>
-          <label className="grid gap-1.5 text-sm font-medium">Category *
+          <label className="grid gap-1.5 text-sm font-medium">Kategori *
+            {/* Stored value stays the English canonical token (value={c}); the user sees the Indonesian label. */}
             <select value={form.category} onChange={(e) => set("category", e.target.value as Category)} className={field}>
-              {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+              {CATEGORIES.map((c) => <option key={c} value={c}>{categoryLabel(c)}</option>)}
             </select>
           </label>
-          <label className="grid gap-1.5 text-sm font-medium">Quantity *
-            <input value={form.quantity} placeholder="e.g. 1 L, 6 pcs" onChange={(e) => set("quantity", e.target.value)} className={field} {...aria("quantity")} />
+          <label className="grid gap-1.5 text-sm font-medium">Jumlah *
+            <input value={form.quantity} placeholder="mis. 1 L, 6 pcs" onChange={(e) => set("quantity", e.target.value)} className={field} {...aria("quantity")} />
             <Err k="quantity" />
           </label>
-          <label className="grid gap-1.5 text-sm font-medium">Storage location *
+          <label className="grid gap-1.5 text-sm font-medium">Lokasi penyimpanan *
+            {/* Stored value stays the English canonical token (value={l}); the user sees the Indonesian label. */}
             <select value={form.location} onChange={(e) => set("location", e.target.value as Location)} className={field}>
-              {LOCATIONS.map((c) => <option key={c}>{c}</option>)}
+              {LOCATIONS.map((l) => <option key={l} value={l}>{locationLabel(l)}</option>)}
             </select>
           </label>
-          <label className="grid gap-1.5 text-sm font-medium">Estimated price ($)
-            <input inputMode="decimal" value={form.price} placeholder="Optional" onChange={(e) => set("price", e.target.value)} className={field} {...aria("price")} />
+          <label className="grid gap-1.5 text-sm font-medium">Perkiraan harga (Rp)
+            <input inputMode="numeric" value={form.price} placeholder="mis. 15000" onChange={(e) => set("price", e.target.value)} className={field} {...aria("price")} />
             <Err k="price" />
           </label>
-          <label className="grid gap-1.5 text-sm font-medium">Date on package *
+          <label className="grid gap-1.5 text-sm font-medium">Tanggal pada kemasan *
             <input type="date" value={form.expiresOn} onChange={(e) => set("expiresOn", e.target.value)} className={field} {...aria("expiresOn")} />
             <Err k="expiresOn" />
           </label>
           <fieldset className="grid gap-1.5 text-sm font-medium">
-            <legend className="mb-1.5">Date type *</legend>
+            <legend className="mb-1.5">Jenis tanggal *</legend>
             <div className="grid grid-cols-2 gap-2">
               {(["use_by", "best_before"] as const).map((t) => (
                 <label key={t} className={`flex h-10 cursor-pointer items-center justify-center rounded-lg border text-[13px] transition ${form.dateType === t ? "border-primary bg-mint text-primary-deep" : "hover:bg-muted"}`}>
                   <input type="radio" name="dateType" className="sr-only" checked={form.dateType === t} onChange={() => set("dateType", t)} />
-                  {t === "use_by" ? "Use by" : "Best before"}
+                  {t === "use_by" ? "Tanggal pakai" : "Baik sebelum"}
                 </label>
               ))}
             </div>
           </fieldset>
         </div>
         <p className="mt-4 rounded-lg bg-muted px-3 py-2 text-xs text-muted-foreground">
-          “Use by” relates to safety; “best before” relates to quality. Dates are a guide only — always check how food looks and smells.
+          “Tanggal pakai” soal keamanan; “baik sebelum” soal kualitas. Tanggal hanya panduan — selalu periksa tampilan dan aroma makanan.
         </p>
 
         <div className="mt-6 flex justify-end gap-2">
-          <button type="button" onClick={close} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Cancel</button>
+          <button type="button" onClick={close} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Batal</button>
           <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-60">
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-            {isEdit ? "Save changes" : "Add to pantry"}
+            {isEdit ? "Simpan perubahan" : "Tambahkan ke Dapur"}
           </button>
         </div>
       </form>

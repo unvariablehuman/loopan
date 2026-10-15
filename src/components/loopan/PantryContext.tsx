@@ -4,7 +4,7 @@ import { makeSeed, type PantryItem } from "@/lib/pantry-data";
 
 const KEY = "loopan.pantry.v1";
 
-interface UsedEntry { id: string; name: string; price?: number | undefined; usedAt: string }
+export interface UsedEntry { id: string; name: string; price?: number | undefined; usedAt: string }
 interface Stored { items: PantryItem[]; used: UsedEntry[] }
 
 export interface Prefill {
@@ -19,6 +19,7 @@ export type ScannerKind = null | "barcode" | "expiry";
 interface Ctx {
   ready: boolean;
   items: PantryItem[];
+  used: UsedEntry[];
   usedThisWeek: UsedEntry[];
   addItem: (p: Omit<PantryItem, "id" | "addedAt">) => void;
   updateItem: (id: string, p: Omit<PantryItem, "id" | "addedAt">) => void;
@@ -64,7 +65,7 @@ export function PantryProvider({ children }: { children: ReactNode }) {
     setState((s) => {
       const it = s.items.find((x) => x.id === id);
       if (!it) return s;
-      toast.success(`${it.name} marked as used`);
+      toast.success(`${it.name} ditandai sudah digunakan`);
       return { items: s.items.filter((x) => x.id !== id), used: [...s.used, { id, name: it.name, price: it.price, usedAt: new Date().toISOString() }] };
     });
   }, []);
@@ -77,6 +78,7 @@ export function PantryProvider({ children }: { children: ReactNode }) {
       value={{
         ready,
         items: state.items,
+        used: state.used,
         usedThisWeek,
         editor,
         scanner,
@@ -85,22 +87,22 @@ export function PantryProvider({ children }: { children: ReactNode }) {
         markUsed,
         addItem: (p) => {
           setState((s) => ({ ...s, items: [{ ...p, id: crypto.randomUUID(), addedAt: new Date().toISOString() }, ...s.items] }));
-          toast.success(`${p.name} added to your pantry`);
+          toast.success(`${p.name} ditambahkan ke dapur`);
         },
         updateItem: (id, p) => {
           setState((s) => ({ ...s, items: s.items.map((x) => (x.id === id ? { ...x, ...p } : x)) }));
-          toast.success(`${p.name} updated`);
+          toast.success(`${p.name} diperbarui`);
         },
         deleteItem: (id) => {
           setState((s) => {
             const it = s.items.find((x) => x.id === id);
-            if (it) toast(`${it.name} removed`);
+            if (it) toast(`${it.name} dihapus`);
             return { ...s, items: s.items.filter((x) => x.id !== id) };
           });
         },
         resetDemo: () => {
           setState({ items: makeSeed(), used: [] });
-          toast("Sample pantry restored");
+          toast("Contoh isi dapur dipulihkan");
         },
       }}
     >

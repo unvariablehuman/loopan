@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { BeforeYouShop, HeroCard, PantryGlance, ThisWeek, UseFirstSection, WasteInsights } from "@/components/loopan/Widgets";
+import { BeforeYouShop, HeroCard, PantryGlance, ThisWeek, UseFirstSection } from "@/components/loopan/Widgets";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Loopan — Keep Food in the Loop" },
-      { name: "description", content: "Track groceries, watch expiry dates, and waste less food with Loopan's smart pantry dashboard." },
-      { property: "og:title", content: "Loopan — Keep Food in the Loop" },
-      { property: "og:description", content: "A smart pantry dashboard that helps households reduce food waste." },
+      { title: "Loopan — Jaga Makanan Tetap dalam Putaran" },
+      { name: "description", content: "Lacak belanjaan, pantau tanggal kedaluwarsa, dan kurangi pemborosan makanan dengan dasbor dapur pintar Loopan." },
+      { property: "og:title", content: "Loopan — Jaga Makanan Tetap dalam Putaran" },
+      { property: "og:description", content: "Dasbor dapur pintar yang membantu rumah tangga mengurangi pemborosan makanan." },
     ],
   }),
   component: Index,
@@ -19,7 +19,6 @@ function Index() {
       <div className="grid min-w-0 gap-6">
         <HeroCard />
         <UseFirstSection />
-        <WasteInsights />
       </div>
       <div className="grid content-start gap-6 md:grid-cols-2 xl:grid-cols-1">
         <PantryGlance />
