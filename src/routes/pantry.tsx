@@ -50,7 +50,7 @@ function Pantry() {
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {["All", ...CATEGORIES.filter((c) => counts[c] > 0)].map((c) => (
+        {["All", ...CATEGORIES.filter((c) => (counts[c] ?? 0) > 0)].map((c) => (
           <button key={c} onClick={() => setCat(c)} aria-pressed={cat === c} className={`rounded-full px-3.5 py-1.5 text-[13px] font-medium transition ${cat === c ? "bg-primary text-primary-foreground" : "bg-mint text-foreground/80 hover:bg-sage"}`}>
             {c} <span className="opacity-70">{c === "All" ? items.length : counts[c]}</span>
           </button>
