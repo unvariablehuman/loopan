@@ -6,7 +6,7 @@ import {
 import hero from "@/assets/hero-groceries.jpg";
 import { usePantry } from "./PantryContext";
 import { byPriority, dateTypeLabel, daysLeft, formatDate, statusLabel, statusOf, wasteData, type PantryItem } from "@/lib/pantry-data";
-import { MapPin, Pencil, Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 export const DemoTag = () => (
   <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Demo data</span>
