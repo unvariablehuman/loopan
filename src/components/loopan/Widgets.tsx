@@ -258,7 +258,7 @@ export function BeforeYouShop() {
   const [list, setList] = useState(shopSeed);
   return (
     <section className="card-surface p-5">
-      <SectionHead icon={ShoppingCart} title="Before you shop" sub="Check what you already have." />
+      <SectionHead icon={ShoppingCart} title="Before you shop" sub="Sample checklist — tap to toggle." action={<DemoTag />} />
       <ul className="mt-4 grid gap-2">
         {list.map((i) => (
           <li key={i.id}>
