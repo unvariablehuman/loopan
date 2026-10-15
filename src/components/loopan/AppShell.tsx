@@ -237,7 +237,7 @@ function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
             onChange={(e) => setQ(e.target.value)}
             placeholder="Cari produk, resep, atau apa saja..."
             aria-label="Cari dapur"
-            className="h-11 w-full rounded-full border bg-card pl-11 pr-10 text-sm shadow-soft placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40"
+            className="h-11 w-full rounded-full border bg-card pl-11 pr-10 text-xs shadow-soft placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/40 sm:text-sm"
           />
           {q && (
             <button onClick={() => setQ("")} aria-label="Hapus pencarian" className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:bg-muted">
