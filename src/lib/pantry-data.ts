@@ -17,9 +17,9 @@ export interface PantryItem {
   location: Location;
   expiresOn: string; // YYYY-MM-DD
   dateType: DateType;
-  price?: number;
-  image?: string;
-  tone?: "coral" | "sage" | "mint";
+  price?: number | undefined;
+  image?: string | undefined;
+  tone?: "coral" | "sage" | "mint" | undefined;
   addedAt: string;
 }
 
@@ -29,7 +29,7 @@ const DAY = 86_400_000;
 
 export function parseDate(s: string): Date | null {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
-  const [y, m, d] = s.split("-").map(Number);
+  const [y = 0, m = 1, d = 1] = s.split("-").map(Number);
   const dt = new Date(y, m - 1, d);
   return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d ? dt : null;
 }

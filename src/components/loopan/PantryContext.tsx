@@ -4,7 +4,7 @@ import { makeSeed, type PantryItem } from "@/lib/pantry-data";
 
 const KEY = "loopan.pantry.v1";
 
-interface UsedEntry { id: string; name: string; price?: number; usedAt: string }
+interface UsedEntry { id: string; name: string; price?: number | undefined; usedAt: string }
 interface Stored { items: PantryItem[]; used: UsedEntry[] }
 
 export type EditorState = null | { mode: "add"; hint?: "barcode" | "expiry" } | { mode: "edit"; item: PantryItem };
