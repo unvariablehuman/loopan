@@ -1,24 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { BeforeYouShop, HeroCard, PantryGlance, ThisWeek, UseFirstSection, WasteInsights } from "@/components/loopan/Widgets";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Loopan — Keep Food in the Loop" },
+      { name: "description", content: "Track groceries, watch expiry dates, and waste less food with Loopan's smart pantry dashboard." },
+      { property: "og:title", content: "Loopan — Keep Food in the Loop" },
+      { property: "og:description", content: "A smart pantry dashboard that helps households reduce food waste." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid min-w-0 gap-6">
+        <HeroCard />
+        <UseFirstSection />
+        <WasteInsights />
+      </div>
+      <div className="grid content-start gap-6 md:grid-cols-2 xl:grid-cols-1">
+        <PantryGlance />
+        <ThisWeek />
+        <BeforeYouShop />
+      </div>
     </div>
   );
 }
