@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Pantry state lives only in `src/components/loopan/PantryContext.tsx` (localStorage `loopan.pantry.v1`, loaded in useEffect); all pages/widgets read from it — single data model, avoids drift between dashboard and lists.
+- Store only the expiry date (`expiresOn`, YYYY-MM-DD); compute days/status via helpers in `src/lib/pantry-data.ts` — labels must never be hardcoded.
