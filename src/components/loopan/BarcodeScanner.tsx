@@ -75,9 +75,10 @@ function Inner({ close, confirm }: { close: () => void; confirm: (p: Prefill) =>
         const name = (e as Error).name;
         setPhase({
           k: "camera_error",
-          msg: name === "NotAllowedError" ? "Camera permission was denied. Allow camera access in your browser settings, or enter the barcode below."
+          msg: name === "NotAllowedError" || name === "SecurityError" ? "Camera permission was denied. Allow camera access in your browser settings, or enter the barcode below."
             : name === "NotFoundError" || name === "OverconstrainedError" ? "No camera was found on this device."
-            : "The camera couldn’t be started.",
+            : name === "NotReadableError" || name === "AbortError" ? "The camera is being used by another app. Close it and try again, or enter the barcode below."
+            : "The camera couldn’t be started. Enter the barcode below instead.",
         });
       }
     })();
