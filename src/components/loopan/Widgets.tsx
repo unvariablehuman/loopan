@@ -86,7 +86,7 @@ export function ProductCard({ p }: { p: Product }) {
       <div className="flex flex-1 flex-col p-4">
         <h3 className="flex items-center gap-2 text-[15px] font-semibold"><Leaf className="h-4 w-4 text-primary" />{p.name}</h3>
         <p className="mt-0.5 pl-6 text-xs text-muted-foreground">{p.category}</p>
-        <p className="mt-3 flex items-center gap-2 text-[13px] text-foreground/80"><CalendarDays className="h-4 w-4" /> Exp. {p.expires}</p>
+        <p className="mb-4 mt-3 flex items-center gap-2 text-[13px] text-foreground/80"><CalendarDays className="h-4 w-4" /> Exp. {p.expires}</p>
         {open && (
           <div className="mt-3 rounded-lg bg-card/80 p-3 text-xs text-foreground/80">
             Quantity: {p.quantity}
@@ -95,7 +95,7 @@ export function ProductCard({ p }: { p: Product }) {
             </button>
           </div>
         )}
-        <button onClick={() => setOpen((o) => !o)} aria-expanded={open} className="mt-auto flex items-center justify-center gap-1.5 rounded-full bg-card/70 py-2 pt-2 text-[13px] font-semibold text-primary-deep transition hover:bg-card [margin-top:max(0.75rem,auto)]">
+        <button onClick={() => setOpen((o) => !o)} aria-expanded={open} className="mt-auto flex items-center justify-center gap-1.5 rounded-full bg-card/70 py-2 text-[13px] font-semibold text-primary-deep transition hover:bg-card">
           {open ? "Hide details" : "View details"} <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </div>
