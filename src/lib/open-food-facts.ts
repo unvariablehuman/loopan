@@ -19,7 +19,7 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
   try {
     const res = await fetch(
       `https://world.openfoodfacts.org/api/v2/product/${code}.json?fields=product_name,product_name_en,brands,image_front_small_url,image_url,categories_tags`,
-      { signal },
+      { signal: signal ?? null },
     );
     if (res.status === 404) return { status: "not_found" };
     if (!res.ok) return { status: "error", message: `Lookup failed (${res.status})` };
