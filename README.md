@@ -1,24 +1,44 @@
-# Loopan
+# Loopan 🌱
+### Keep Food in the Loop.
 
-Implement exactly the screenshot and nothing else
+Loopan is a smart pantry management web application designed to help households organize food inventory, track expiration dates, and reduce food waste through digital technology.
 
-This project was built with [Lovable](https://lovable.dev).
+By combining barcode scanning, expiration-date recognition, and pantry insights, Loopan aims to help users make better decisions about the food they store and consume.
 
-## Build with Lovable
+##  Features
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/9fcf50ab-5b41-41fa-9499-33590ea80838).
+- **Smart Pantry Management** — Add, edit, search, and manage food items in one place.
+- **Barcode Scanner** — Scan product barcodes and retrieve available product information through the Open Food Facts API.
+- **Expiration Date Recognition** — Use OCR to extract expiration-related information from food package labels.
+- **Use First** — Prioritize items that need attention based on their expiration dates.
+- **Pantry Insights** — View pantry statistics and track food usage.
+- **Responsive Interface** — Designed for different screen sizes.
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+##  Technology Stack
 
-## Development
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Open Food Facts API
+- Barcode scanning and OCR libraries
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+*The technology stack is subject to verification against the project's actual implementation.*
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+##  Sustainable Development Goals
+
+Loopan primarily supports **SDG 12: Responsible Consumption and Production**, with a focus on reducing household food waste. It also aligns with the broader sustainability goals of SDG 13: Climate Action.
+
+##  Project Status
+
+Loopan is currently under development. Core interface and scanning workflows are being tested and refined. Real-device testing and further improvements are ongoing.
+
+##  Competition
+
+Developed for **INVOFEST 2026**, under the theme *Smart Ecosystems: Digital Solutions for a Sustainable Future*, with a focus on **Green Tech & Sustainable Environment**.
+
+##  Vision
+
+**Keep Food in the Loop.**
+
+Make food management smarter, reduce unnecessary waste, and build more sustainable everyday habits.
