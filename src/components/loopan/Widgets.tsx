@@ -37,7 +37,7 @@ export function HeroCard() {
           <h1 className="text-[28px] font-extrabold tracking-tight sm:text-[34px]">Good morning!</h1>
         </div>
         <p className="mt-2 text-[15px] text-foreground/80">Let’s keep your food in the loop.</p>
-        <div className="mt-6 flex flex-col gap-4 rounded-xl bg-card p-4 shadow-soft sm:flex-row sm:items-center">
+        <div className="mt-6 flex flex-col gap-4 rounded-xl bg-card p-4 shadow-soft 2xl:flex-row 2xl:items-center">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-mint text-primary"><Camera className="h-6 w-6" /></span>
             <div className="min-w-0">

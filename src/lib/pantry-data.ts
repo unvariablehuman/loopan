@@ -25,7 +25,7 @@ export const products: Product[] = [
   { id: "bread", name: "Whole-grain bread", category: "Grains", expires: "Oct 19, 2026", daysLeft: 4, quantity: "1 loaf" },
   { id: "apples", name: "Apples", category: "Fruits", expires: "Oct 29, 2026", daysLeft: 14, quantity: "4 pcs" },
   { id: "rice", name: "Jasmine rice", category: "Grains", expires: "Mar 02, 2027", daysLeft: 138, quantity: "2 kg" },
-  { id: "chicken", name: "Chicken breast", category: "Protein", expires: "Oct 17, 2026", daysLeft: 2, quantity: "400 g" },
+  { id: "chicken", name: "Chicken breast", category: "Protein", expires: "Oct 20, 2026", daysLeft: 5, quantity: "400 g" },
   { id: "cheese", name: "Cheddar cheese", category: "Dairy", expires: "Nov 05, 2026", daysLeft: 21, quantity: "250 g" },
 ];
 
