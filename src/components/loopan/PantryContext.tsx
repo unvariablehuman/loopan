@@ -8,7 +8,7 @@ interface UsedEntry { id: string; name: string; price?: number | undefined; used
 interface Stored { items: PantryItem[]; used: UsedEntry[] }
 
 export interface Prefill {
-  name?: string; brand?: string; barcode?: string; image?: string; category?: PantryItem["category"];
+  name?: string | undefined; brand?: string | undefined; barcode?: string | undefined; image?: string | undefined; category?: PantryItem["category"] | undefined;
   expiresOn?: string; dateType?: PantryItem["dateType"];
   /** Shown above the form, e.g. "Product not found". */
   notice?: { tone: "info" | "warn"; text: string };

@@ -30,9 +30,9 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
     const tags = Array.isArray(p["categories_tags"]) ? (p["categories_tags"] as string[]).join(" ") : "";
     const category = CAT_RULES.find(([re]) => re.test(tags))?.[1];
     const product: OffProduct = {
-      name: str(p.product_name) ?? str(p.product_name_en),
-      brand: str(p.brands)?.split(",")[0]?.trim(),
-      image: str(p.image_front_small_url) ?? str(p.image_url),
+      name: str(p["product_name"]) ?? str(p["product_name_en"]),
+      brand: str(p["brands"])?.split(",")[0]?.trim(),
+      image: str(p["image_front_small_url"]) ?? str(p["image_url"]),
       category,
     };
     if (!product.name && !product.brand) return { status: "not_found" };
