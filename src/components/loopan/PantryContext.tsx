@@ -7,7 +7,14 @@ const KEY = "loopan.pantry.v1";
 interface UsedEntry { id: string; name: string; price?: number | undefined; usedAt: string }
 interface Stored { items: PantryItem[]; used: UsedEntry[] }
 
-export type EditorState = null | { mode: "add"; hint?: "barcode" | "expiry" } | { mode: "edit"; item: PantryItem };
+export interface Prefill {
+  name?: string | undefined; brand?: string | undefined; barcode?: string | undefined; image?: string | undefined; category?: PantryItem["category"] | undefined;
+  expiresOn?: string; dateType?: PantryItem["dateType"];
+  /** Shown above the form, e.g. "Product not found". */
+  notice?: { tone: "info" | "warn"; text: string };
+}
+export type EditorState = null | { mode: "add"; prefill?: Prefill } | { mode: "edit"; item: PantryItem };
+export type ScannerKind = null | "barcode" | "expiry";
 
 interface Ctx {
   ready: boolean;
@@ -18,6 +25,8 @@ interface Ctx {
   deleteItem: (id: string) => void;
   markUsed: (id: string) => void;
   editor: EditorState;
+  scanner: ScannerKind;
+  openScanner: (k: ScannerKind) => void;
   openEditor: (s: EditorState) => void;
   resetDemo: () => void;
 }
@@ -40,6 +49,7 @@ export function PantryProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<Stored>({ items: [], used: [] });
   const [ready, setReady] = useState(false);
   const [editor, openEditor] = useState<EditorState>(null);
+  const [scanner, openScanner] = useState<ScannerKind>(null);
 
   useEffect(() => {
     setState(load() ?? { items: makeSeed(), used: [] });
@@ -69,6 +79,8 @@ export function PantryProvider({ children }: { children: ReactNode }) {
         items: state.items,
         usedThisWeek,
         editor,
+        scanner,
+        openScanner,
         openEditor,
         markUsed,
         addItem: (p) => {

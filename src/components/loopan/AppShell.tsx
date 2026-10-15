@@ -7,6 +7,8 @@ import { LoopanMark } from "./Logo";
 import { usePantry } from "./PantryContext";
 import { daysLeft, statusLabel } from "@/lib/pantry-data";
 import { ItemEditor } from "./ItemEditor";
+import { BarcodeScanner } from "./BarcodeScanner";
+import { ExpiryScanner } from "./ExpiryScanner";
 import { Toaster } from "sonner";
 
 const nav = [
@@ -74,6 +76,8 @@ export function AppShell({ children }: { children: ReactNode }) {
         })}
       </nav>
       <ItemEditor />
+      <BarcodeScanner />
+      <ExpiryScanner />
       <Toaster position="bottom-right" richColors closeButton />
     </div>
   );

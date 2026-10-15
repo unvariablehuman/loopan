@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { CalendarClock, PackagePlus, Pencil, X } from "lucide-react";
+import { AlertCircle, Barcode, CalendarClock, Info, Loader2, PackagePlus, Pencil, X } from "lucide-react";
 import { usePantry } from "./PantryContext";
 import { CATEGORIES, LOCATIONS, parseDate, type Category, type DateType, type Location } from "@/lib/pantry-data";
 
@@ -23,13 +23,18 @@ export function ItemEditor() {
   const { editor, openEditor, addItem, updateItem } = usePantry();
   const [form, setForm] = useState<Form>(empty);
   const [errors, setErrors] = useState<Partial<Record<keyof Form, string>>>({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setErrors({});
     if (editor?.mode === "edit") {
       const i = editor.item;
       setForm({ name: i.name, category: i.category, quantity: i.quantity, location: i.location, expiresOn: i.expiresOn, dateType: i.dateType, price: i.price != null ? String(i.price) : "" });
-    } else if (editor) setForm(empty);
+    } else if (editor) {
+      const pf = editor.prefill;
+      setForm({ ...empty, ...(pf?.name ? { name: pf.name } : {}), ...(pf?.category ? { category: pf.category } : {}), ...(pf?.expiresOn ? { expiresOn: pf.expiresOn } : {}), ...(pf?.dateType ? { dateType: pf.dateType } : {}) });
+    }
+    setSaving(false);
   }, [editor]);
 
   if (!editor) return null;
@@ -37,8 +42,10 @@ export function ItemEditor() {
   const set = <K extends keyof Form>(k: K, v: Form[K]) => setForm((f) => ({ ...f, [k]: v }));
   const close = () => openEditor(null);
 
+  const prefill = editor.mode === "add" ? editor.prefill : undefined;
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (saving) return;
     const r = schema.safeParse(form);
     if (!r.success) {
       const errs: typeof errors = {};
@@ -50,8 +57,11 @@ export function ItemEditor() {
     const payload = {
       name: d.name, category: d.category as Category, quantity: d.quantity, location: d.location as Location,
       expiresOn: d.expiresOn, dateType: d.dateType as DateType, price: d.price ? Number(d.price) : undefined,
-      ...(isEdit ? { image: editor.item.image, tone: editor.item.tone } : {}),
+      ...(isEdit
+        ? { image: editor.item.image, tone: editor.item.tone, brand: editor.item.brand, barcode: editor.item.barcode }
+        : { image: prefill?.image, brand: prefill?.brand, barcode: prefill?.barcode }),
     };
+    setSaving(true);
     if (isEdit) updateItem(editor.item.id, payload);
     else addItem(payload);
     close();
@@ -66,18 +76,34 @@ export function ItemEditor() {
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="grid h-11 w-11 place-items-center rounded-xl bg-mint text-primary">
-              {isEdit ? <Pencil className="h-5 w-5" /> : editor.hint === "expiry" ? <CalendarClock className="h-5 w-5" /> : <PackagePlus className="h-5 w-5" />}
+              {isEdit ? <Pencil className="h-5 w-5" /> : prefill?.barcode ? <Barcode className="h-5 w-5" /> : prefill?.expiresOn ? <CalendarClock className="h-5 w-5" /> : <PackagePlus className="h-5 w-5" />}
             </span>
             <div>
-              <h2 id="editor-title" className="text-lg font-semibold">{isEdit ? "Edit item" : "Add food item"}</h2>
+              <h2 id="editor-title" className="text-lg font-semibold">{isEdit ? "Edit item" : prefill ? "Confirm item" : "Add food item"}</h2>
               <p className="text-xs text-muted-foreground">
-                {editor.mode === "add" && editor.hint ? "Scanning isn’t available yet — enter the details manually." : "Fields marked * are required."}
+                {prefill ? "Check the details before saving. Fields marked * are required." : "Fields marked * are required."}
               </p>
             </div>
           </div>
           <button type="button" onClick={close} aria-label="Close" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
         </div>
 
+        {prefill?.notice && (
+          <div role="status" className={`mt-4 flex gap-2 rounded-lg px-3 py-2.5 text-xs ${prefill.notice.tone === "warn" ? "bg-amber text-amber-foreground" : "bg-mint text-primary-deep"}`}>
+            {prefill.notice.tone === "warn" ? <AlertCircle className="h-4 w-4 shrink-0" /> : <Info className="h-4 w-4 shrink-0" />}
+            <span>{prefill.notice.text}</span>
+          </div>
+        )}
+        {(prefill?.barcode || prefill?.image || prefill?.brand) && (
+          <div className="mt-4 flex items-center gap-3 rounded-xl border bg-background p-3">
+            {prefill.image ? <img src={prefill.image} alt="" className="h-14 w-14 shrink-0 rounded-lg bg-card object-contain" /> : <span className="grid h-14 w-14 shrink-0 place-items-center rounded-lg bg-mint text-primary"><Barcode className="h-6 w-6" /></span>}
+            <div className="min-w-0 text-xs text-muted-foreground">
+              {prefill.brand && <div className="truncate text-sm font-semibold text-foreground">{prefill.brand}</div>}
+              {prefill.barcode && <div>Barcode {prefill.barcode}</div>}
+              {prefill.barcode && !prefill.notice && <div>Product info from Open Food Facts</div>}
+            </div>
+          </div>
+        )}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5 text-sm font-medium sm:col-span-2">Product name *
             <input autoFocus value={form.name} onChange={(e) => set("name", e.target.value)} className={field} {...aria("name")} />
@@ -123,7 +149,8 @@ export function ItemEditor() {
 
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={close} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Cancel</button>
-          <button type="submit" className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep">
+          <button type="submit" disabled={saving} className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-60">
+            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
             {isEdit ? "Save changes" : "Add to pantry"}
           </button>
         </div>

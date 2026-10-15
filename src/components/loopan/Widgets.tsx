@@ -28,7 +28,7 @@ export function SectionHead({ icon: Icon, title, sub, action }: { icon: typeof L
 }
 
 export function HeroCard() {
-  const { openEditor } = usePantry();
+  const { openScanner } = usePantry();
   return (
     <section className="relative overflow-hidden rounded-2xl bg-sage shadow-soft">
       <img src={hero} alt="Paper bag with fresh vegetables" width={1024} height={768} className="absolute inset-y-0 right-0 hidden h-full w-[42%] object-cover md:block [mask-image:linear-gradient(to_right,transparent,black_30%)]" />
@@ -47,10 +47,10 @@ export function HeroCard() {
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => openEditor({ mode: "add", hint: "barcode" })} className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-[13px] font-semibold text-primary-foreground shadow-soft transition hover:bg-primary-deep">
+            <button onClick={() => openScanner("barcode")} className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-[13px] font-semibold text-primary-foreground shadow-soft transition hover:bg-primary-deep">
               <ScanBarcode className="h-4 w-4" /> Scan barcode
             </button>
-            <button onClick={() => openEditor({ mode: "add", hint: "expiry" })} className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-4 py-2.5 text-[13px] font-semibold text-primary-deep transition hover:bg-mint">
+            <button onClick={() => openScanner("expiry")} className="inline-flex items-center gap-2 rounded-full border border-primary/40 px-4 py-2.5 text-[13px] font-semibold text-primary-deep transition hover:bg-mint">
               <Camera className="h-4 w-4" /> Scan expiry label
             </button>
           </div>

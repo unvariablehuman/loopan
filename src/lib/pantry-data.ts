@@ -19,6 +19,8 @@ export interface PantryItem {
   dateType: DateType;
   price?: number | undefined;
   image?: string | undefined;
+  brand?: string | undefined;
+  barcode?: string | undefined;
   tone?: "coral" | "sage" | "mint" | undefined;
   addedAt: string;
 }
