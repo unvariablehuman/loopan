@@ -1,11 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import {
-  BarChart3, Bell, ChevronDown, Home, Lightbulb, Package, Search, Settings, Sprout, X, ScanBarcode, CalendarClock,
+  BarChart3, Bell, ChevronDown, Home, Lightbulb, Package, Search, Settings, Sprout, X,
 } from "lucide-react";
 import { LoopanMark } from "./Logo";
 import { usePantry } from "./PantryContext";
-import { statusLabel } from "@/lib/pantry-data";
+import { daysLeft, statusLabel } from "@/lib/pantry-data";
+import { ItemEditor } from "./ItemEditor";
+import { Toaster } from "sonner";
 
 const nav = [
   { to: "/", label: "Overview", icon: Home },
@@ -71,7 +73,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           );
         })}
       </nav>
-      <ScanDialog />
+      <ItemEditor />
+      <Toaster position="bottom-right" richColors closeButton />
     </div>
   );
 }
@@ -106,9 +109,9 @@ function Header() {
                 <p className="px-3 py-3 text-sm text-muted-foreground">No products match “{q}”.</p>
               ) : (
                 results.map((p) => (
-                  <Link key={p.id} to="/pantry" onClick={() => setQ("")} className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-muted">
+                  <Link key={p.id} to="/pantry" search={{ q: p.name }} onClick={() => setQ("")} className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm hover:bg-muted">
                     <span className="min-w-0 truncate"><span className="font-semibold">{p.name}</span> <span className="text-muted-foreground">· {p.category}</span></span>
-                    <span className="shrink-0 text-xs text-muted-foreground">{statusLabel(p.daysLeft)}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">{statusLabel(daysLeft(p.expiresOn), p.dateType)}</span>
                   </Link>
                 ))
               )}
@@ -129,53 +132,3 @@ function Header() {
   );
 }
 
-function ScanDialog() {
-  const { scanMode, setScanMode, addItem } = usePantry();
-  const [name, setName] = useState("Greek yogurt");
-  const [days, setDays] = useState(5);
-  if (!scanMode) return null;
-  const isBarcode = scanMode === "barcode";
-  return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/30 p-4" role="dialog" aria-modal="true" aria-labelledby="scan-title" onClick={() => setScanMode(null)}>
-      <div className="card-surface w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-xl bg-mint text-primary">
-              {isBarcode ? <ScanBarcode className="h-5 w-5" /> : <CalendarClock className="h-5 w-5" />}
-            </span>
-            <div>
-              <h2 id="scan-title" className="text-lg font-semibold">{isBarcode ? "Scan barcode" : "Scan expiry label"}</h2>
-              <p className="text-xs text-muted-foreground">Demo mode — camera scanning comes later.</p>
-            </div>
-          </div>
-          <button onClick={() => setScanMode(null)} aria-label="Close" className="rounded-full p-1.5 text-muted-foreground hover:bg-muted"><X className="h-4 w-4" /></button>
-        </div>
-        <div className="mt-5 grid h-32 place-items-center rounded-xl border-2 border-dashed border-primary/30 bg-mint/60 text-sm text-muted-foreground">
-          {isBarcode ? "Point your camera at a barcode" : "Point your camera at the date label"}
-        </div>
-        <div className="mt-5 grid gap-3">
-          <label className="grid gap-1.5 text-sm font-medium">Product name
-            <input value={name} onChange={(e) => setName(e.target.value)} className="h-10 rounded-lg border bg-background px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-ring/40" />
-          </label>
-          <label className="grid gap-1.5 text-sm font-medium">Days until expiry
-            <input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="h-10 rounded-lg border bg-background px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-ring/40" />
-          </label>
-        </div>
-        <div className="mt-6 flex justify-end gap-2">
-          <button onClick={() => setScanMode(null)} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Cancel</button>
-          <button
-            disabled={!name.trim()}
-            onClick={() => {
-              const d = new Date(); d.setDate(d.getDate() + days);
-              addItem({ id: `${Date.now()}`, name: name.trim(), category: "Added", daysLeft: days, quantity: "1", expires: d.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }) });
-              setScanMode(null);
-            }}
-            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-50"
-          >
-            Add to pantry
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
