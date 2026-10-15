@@ -10,33 +10,73 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as PantryRouteImport } from './routes/pantry'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as UseFirstRouteImport } from './routes/use-first'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PantryRoute = PantryRouteImport.update({
+  id: '/pantry',
+  path: '/pantry',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UseFirstRoute = UseFirstRouteImport.update({
+  id: '/use-first',
+  path: '/use-first',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/insights': typeof InsightsRoute
+  '/pantry': typeof PantryRoute
+  '/settings': typeof SettingsRoute
+  '/use-first': typeof UseFirstRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/insights': typeof InsightsRoute
+  '/pantry': typeof PantryRoute
+  '/settings': typeof SettingsRoute
+  '/use-first': typeof UseFirstRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/insights': typeof InsightsRoute
+  '/pantry': typeof PantryRoute
+  '/settings': typeof SettingsRoute
+  '/use-first': typeof UseFirstRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/insights' | '/pantry' | '/settings' | '/use-first'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/insights' | '/pantry' | '/settings' | '/use-first'
+  id: '__root__' | '/' | '/insights' | '/pantry' | '/settings' | '/use-first'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  InsightsRoute: typeof InsightsRoute
+  PantryRoute: typeof PantryRoute
+  SettingsRoute: typeof SettingsRoute
+  UseFirstRoute: typeof UseFirstRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +88,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pantry': {
+      id: '/pantry'
+      path: '/pantry'
+      fullPath: '/pantry'
+      preLoaderRoute: typeof PantryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/use-first': {
+      id: '/use-first'
+      path: '/use-first'
+      fullPath: '/use-first'
+      preLoaderRoute: typeof UseFirstRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  InsightsRoute: InsightsRoute,
+  PantryRoute: PantryRoute,
+  SettingsRoute: SettingsRoute,
+  UseFirstRoute: UseFirstRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
