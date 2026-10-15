@@ -2,37 +2,101 @@ import yogurt from "@/assets/yogurt.jpg";
 import spinach from "@/assets/spinach.jpg";
 import milk from "@/assets/milk.jpg";
 
-export type Status = "today" | "soon" | "ok";
+export const CATEGORIES = ["Dairy", "Vegetables", "Fruits", "Grains", "Protein", "Pantry staples", "Frozen", "Other"] as const;
+export const LOCATIONS = ["Fridge", "Freezer", "Pantry", "Counter"] as const;
+export type Category = (typeof CATEGORIES)[number];
+export type Location = (typeof LOCATIONS)[number];
+export type DateType = "use_by" | "best_before";
 
-export interface Product {
+/** Stored shape — persisted to localStorage. Never stores status or days. */
+export interface PantryItem {
   id: string;
   name: string;
-  category: string;
-  expires: string;
-  daysLeft: number;
+  category: Category;
   quantity: string;
+  location: Location;
+  expiresOn: string; // YYYY-MM-DD
+  dateType: DateType;
+  price?: number;
   image?: string;
   tone?: "coral" | "sage" | "mint";
+  addedAt: string;
 }
 
-// Demo data only — illustrative values, not real tracking.
-export const products: Product[] = [
-  { id: "yogurt", name: "Yogurt", category: "Dairy", expires: "Oct 15, 2026", daysLeft: 0, quantity: "1 tub", image: yogurt, tone: "coral" },
-  { id: "spinach", name: "Spinach", category: "Vegetables", expires: "Oct 17, 2026", daysLeft: 2, quantity: "200 g", image: spinach, tone: "sage" },
-  { id: "milk", name: "Milk", category: "Dairy", expires: "Oct 18, 2026", daysLeft: 3, quantity: "1 L", image: milk, tone: "mint" },
-  { id: "eggs", name: "Eggs", category: "Protein", expires: "Oct 26, 2026", daysLeft: 11, quantity: "6 pcs" },
-  { id: "carrots", name: "Carrots", category: "Vegetables", expires: "Oct 22, 2026", daysLeft: 7, quantity: "500 g" },
-  { id: "bread", name: "Whole-grain bread", category: "Grains", expires: "Oct 19, 2026", daysLeft: 4, quantity: "1 loaf" },
-  { id: "apples", name: "Apples", category: "Fruits", expires: "Oct 29, 2026", daysLeft: 14, quantity: "4 pcs" },
-  { id: "rice", name: "Jasmine rice", category: "Grains", expires: "Mar 02, 2027", daysLeft: 138, quantity: "2 kg" },
-  { id: "chicken", name: "Chicken breast", category: "Protein", expires: "Oct 20, 2026", daysLeft: 5, quantity: "400 g" },
-  { id: "cheese", name: "Cheddar cheese", category: "Dairy", expires: "Nov 05, 2026", daysLeft: 21, quantity: "250 g" },
-];
+export type Status = "past" | "today" | "soon" | "ok" | "invalid";
 
-export const statusOf = (d: number): Status => (d <= 0 ? "today" : d <= 4 ? "soon" : "ok");
-export const statusLabel = (d: number) =>
-  d <= 0 ? "Use today" : d === 1 ? "1 day left" : `${d} days left`;
+const DAY = 86_400_000;
 
+export function parseDate(s: string): Date | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
+  const [y, m, d] = s.split("-").map(Number);
+  const dt = new Date(y, m - 1, d);
+  return dt.getFullYear() === y && dt.getMonth() === m - 1 && dt.getDate() === d ? dt : null;
+}
+
+export function toISODate(d: Date) {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+/** Whole days between today (local) and the stored date. null if invalid. */
+export function daysLeft(expiresOn: string, now = new Date()): number | null {
+  const d = parseDate(expiresOn);
+  if (!d) return null;
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((d.getTime() - today.getTime()) / DAY);
+}
+
+export function statusOf(days: number | null): Status {
+  if (days === null) return "invalid";
+  if (days < 0) return "past";
+  if (days === 0) return "today";
+  if (days <= 3) return "soon";
+  return "ok";
+}
+
+export function statusLabel(days: number | null, dateType: DateType = "use_by"): string {
+  const s = statusOf(days);
+  if (s === "invalid") return "Check date";
+  if (s === "past") return dateType === "best_before" ? "Past best-before" : "Past use-by";
+  if (s === "today") return "Use today";
+  if (s === "soon") return `Expiring soon · ${days}d`;
+  return "Not urgent";
+}
+
+export const dateTypeLabel = (t: DateType) => (t === "use_by" ? "Use by" : "Best before");
+
+export function formatDate(s: string) {
+  const d = parseDate(s);
+  return d ? d.toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" }) : "Invalid date";
+}
+
+/** Priority sort: invalid dates first (need fixing), then soonest. */
+export function byPriority(a: PantryItem, b: PantryItem) {
+  const da = daysLeft(a.expiresOn), db = daysLeft(b.expiresOn);
+  if (da === null) return -1;
+  if (db === null) return 1;
+  return da - db;
+}
+
+/** First-run sample items, dated relative to today. Call lazily, never at module scope. */
+export function makeSeed(): PantryItem[] {
+  const now = new Date();
+  const at = (n: number) => toISODate(new Date(now.getFullYear(), now.getMonth(), now.getDate() + n));
+  const added = now.toISOString();
+  const base = (o: Omit<PantryItem, "addedAt">): PantryItem => ({ ...o, addedAt: added });
+  return [
+    base({ id: "yogurt", name: "Yogurt", category: "Dairy", quantity: "1 tub", location: "Fridge", expiresOn: at(0), dateType: "use_by", price: 3.5, image: yogurt, tone: "coral" }),
+    base({ id: "spinach", name: "Spinach", category: "Vegetables", quantity: "200 g", location: "Fridge", expiresOn: at(2), dateType: "best_before", price: 2.8, image: spinach, tone: "sage" }),
+    base({ id: "milk", name: "Milk", category: "Dairy", quantity: "1 L", location: "Fridge", expiresOn: at(3), dateType: "use_by", price: 1.9, image: milk, tone: "mint" }),
+    base({ id: "eggs", name: "Eggs", category: "Protein", quantity: "6 pcs", location: "Fridge", expiresOn: at(11), dateType: "best_before", price: 3.2 }),
+    base({ id: "carrots", name: "Carrots", category: "Vegetables", quantity: "500 g", location: "Fridge", expiresOn: at(7), dateType: "best_before" }),
+    base({ id: "bread", name: "Whole-grain bread", category: "Grains", quantity: "1 loaf", location: "Counter", expiresOn: at(4), dateType: "best_before", price: 2.5 }),
+    base({ id: "rice", name: "Jasmine rice", category: "Pantry staples", quantity: "2 kg", location: "Pantry", expiresOn: at(140), dateType: "best_before" }),
+  ];
+}
+
+// Illustrative chart data — no real activity history exists yet.
 export const wasteData = [
   { label: "Vegetables", thisWeek: 9, lastWeek: 12 },
   { label: "Fruits", thisWeek: 5, lastWeek: 6 },
