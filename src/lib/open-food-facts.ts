@@ -1,6 +1,6 @@
 import type { Category } from "./pantry-data";
 
-export interface OffProduct { name?: string; brand?: string; image?: string; category?: Category }
+export interface OffProduct { name?: string | undefined; brand?: string | undefined; image?: string | undefined; category?: Category | undefined }
 export type OffResult = { status: "found"; product: OffProduct } | { status: "not_found" } | { status: "error"; message: string };
 
 const CAT_RULES: [RegExp, Category][] = [
@@ -27,7 +27,7 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
     if (j.status !== 1 || !j.product) return { status: "not_found" };
     const p = j.product;
     const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
-    const tags = Array.isArray(p.categories_tags) ? (p.categories_tags as string[]).join(" ") : "";
+    const tags = Array.isArray(p["categories_tags"]) ? (p["categories_tags"] as string[]).join(" ") : "";
     const category = CAT_RULES.find(([re]) => re.test(tags))?.[1];
     const product: OffProduct = {
       name: str(p.product_name) ?? str(p.product_name_en),
