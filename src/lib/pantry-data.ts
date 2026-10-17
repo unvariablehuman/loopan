@@ -1,6 +1,10 @@
 import yogurt from "@/assets/yogurt.jpg";
 import spinach from "@/assets/spinach.jpg";
 import milk from "@/assets/milk.jpg";
+import eggsImg from "@/assets/Telur.jpg";
+import carrotsImg from "@/assets/Wortel.jpg";
+import breadImg from "@/assets/Roti gandum.jpg";
+import riceImg from "@/assets/Beras Melati.jpg";
 
 export const CATEGORIES = ["Dairy", "Vegetables", "Fruits", "Grains", "Protein", "Pantry staples", "Frozen", "Other"] as const;
 export const LOCATIONS = ["Fridge", "Freezer", "Pantry", "Counter"] as const;
@@ -131,9 +135,9 @@ export function makeSeed(): PantryItem[] {
     base({ id: "yogurt", name: "Yoghurt", category: "Dairy", quantity: "1 tub", location: "Fridge", expiresOn: at(0), dateType: "use_by", price: 18000, image: yogurt, tone: "coral" }),
     base({ id: "spinach", name: "Bayam", category: "Vegetables", quantity: "200 g", location: "Fridge", expiresOn: at(2), dateType: "best_before", price: 12000, image: spinach, tone: "sage" }),
     base({ id: "milk", name: "Susu", category: "Dairy", quantity: "1 L", location: "Fridge", expiresOn: at(3), dateType: "use_by", price: 20000, image: milk, tone: "mint" }),
-    base({ id: "eggs", name: "Telur", category: "Protein", quantity: "6 pcs", location: "Fridge", expiresOn: at(11), dateType: "best_before", price: 28000 }),
-    base({ id: "carrots", name: "Wortel", category: "Vegetables", quantity: "500 g", location: "Fridge", expiresOn: at(7), dateType: "best_before", price: 10000 }),
-    base({ id: "bread", name: "Roti gandum utuh", category: "Grains", quantity: "1 loaf", location: "Counter", expiresOn: at(4), dateType: "best_before", price: 22000 }),
-    base({ id: "rice", name: "Beras melati", category: "Pantry staples", quantity: "2 kg", location: "Pantry", expiresOn: at(140), dateType: "best_before", price: 75000 }),
+    base({ id: "eggs", name: "Telur", category: "Protein", quantity: "6 pcs", location: "Fridge", expiresOn: at(11), dateType: "best_before", price: 28000, image: eggsImg }),
+    base({ id: "carrots", name: "Wortel", category: "Vegetables", quantity: "500 g", location: "Fridge", expiresOn: at(7), dateType: "best_before", price: 10000, image: carrotsImg }),
+    base({ id: "bread", name: "Roti gandum utuh", category: "Grains", quantity: "1 loaf", location: "Counter", expiresOn: at(4), dateType: "best_before", price: 22000, image: breadImg }),
+    base({ id: "rice", name: "Beras melati", category: "Pantry staples", quantity: "2 kg", location: "Pantry", expiresOn: at(140), dateType: "best_before", price: 75000, image: riceImg }),
   ];
 }
