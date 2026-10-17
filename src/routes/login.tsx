@@ -73,7 +73,7 @@ function Login() {
         decoding="async"
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
-      <div className="pointer-events-none absolute inset-0 bg-mint/80 backdrop-blur-[2px]" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 bg-mint/40" aria-hidden="true" />
       <div className="card-surface relative z-10 w-full max-w-md p-6 shadow-lift sm:p-8">
         <div className="flex flex-col items-center gap-2 text-center">
           <Link to="/" className="text-primary" aria-label="Loopan">

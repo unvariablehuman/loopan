@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { z } from "zod";
+import signupBg from "@/assets/1.jpg";
 import { LoopanWordmark } from "@/components/loopan/Logo";
 import { useOnboarding } from "@/hooks/use-onboarding";
 import { useProfile } from "@/hooks/use-profile";
@@ -73,8 +74,19 @@ function Signup() {
     ) : null;
 
   return (
-    <div className="grid min-h-screen w-full place-items-center bg-sage px-5 py-10">
-      <div className="card-surface w-full max-w-md p-6 sm:p-8">
+    <div className="relative grid min-h-screen w-full place-items-center overflow-hidden bg-mint px-5 py-10">
+      {/* Same decorative pantry photo as the login page, with a light cream wash (no blur) so the
+          image stays visible while the white card and text keep enough contrast. */}
+      <img
+        src={signupBg}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-mint/40" aria-hidden="true" />
+      <div className="card-surface relative z-10 w-full max-w-md p-6 shadow-lift sm:p-8">
         <div className="flex flex-col items-center gap-2 text-center">
           <Link to="/" className="text-primary" aria-label="Loopan">
             <LoopanWordmark className="text-2xl font-extrabold leading-none tracking-tight text-primary" />
