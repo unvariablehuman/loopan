@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
-import { Eye, EyeOff, Info, UserPlus } from "lucide-react";
+import { Eye, EyeOff, UserPlus } from "lucide-react";
 import { z } from "zod";
 import { LoopanWordmark } from "@/components/loopan/Logo";
 import { useOnboarding } from "@/hooks/use-onboarding";
@@ -80,15 +80,6 @@ function Signup() {
             <LoopanWordmark className="text-2xl font-extrabold leading-none tracking-tight text-primary" />
           </Link>
           <h1 className="text-xl font-semibold text-foreground">Buat profil Loopan</h1>
-          <p className="text-sm text-muted-foreground">Mulai kelola dapurmu dalam hitungan menit.</p>
-        </div>
-
-        <div role="note" className="mt-5 flex gap-2 rounded-lg bg-mint px-3 py-2.5 text-xs text-primary-deep">
-          <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>
-            Mode demo: pendaftaran hanya simulasi. Loopan tidak membuat akun sungguhan maupun
-            mengirim data ke server.
-          </span>
         </div>
 
         <form noValidate onSubmit={submit} className="mt-6 grid gap-4">

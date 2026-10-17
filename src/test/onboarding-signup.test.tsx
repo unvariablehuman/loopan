@@ -122,10 +122,8 @@ describe("signup password visibility toggle", () => {
 });
 
 describe("signup valid submit", () => {
-  it("shows the simulation note, sets the signup flag, updates the profile name, navigates, and never stores the password", async () => {
+  it("sets the signup flag, updates the profile name, navigates, and never stores the password", async () => {
     const { navigate } = renderSignup();
-    // The non-deceptive simulation note is present.
-    expect(await screen.findByText(/pendaftaran hanya simulasi/i, { exact: false })).toBeInTheDocument();
 
     await fillValid();
     fireEvent.click(screen.getByRole("button", { name: "Daftar" }));
