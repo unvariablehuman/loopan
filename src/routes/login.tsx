@@ -10,7 +10,7 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       { title: "Masuk — Loopan" },
-      { name: "description", content: "Masuk ke Loopan untuk mengelola dapurmu. Mode demo, tanpa akun sungguhan." },
+      { name: "description", content: "Masuk ke Loopan untuk mengelola dapurmu." },
     ],
   }),
   component: Login,

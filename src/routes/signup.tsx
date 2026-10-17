@@ -11,7 +11,7 @@ export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
       { title: "Daftar — Loopan" },
-      { name: "description", content: "Buat profil demo Loopan untuk mencoba mengelola dapurmu. Mode simulasi, tanpa akun sungguhan." },
+      { name: "description", content: "Buat profil Loopan untuk mulai mengelola dapurmu." },
     ],
   }),
   component: Signup,
