@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -13,7 +14,12 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/loopan/AppShell";
+import { SplashOverlay } from "@/components/loopan/SplashOverlay";
 import { PantryProvider } from "@/components/loopan/PantryContext";
+
+// Full-screen onboarding routes render OUTSIDE AppShell (no sidebar/header); every other route
+// (the dashboard and its pages) renders INSIDE it, unchanged.
+const ONBOARDING_PATHS = ["/welcome", "/login", "/signup"];
 
 function NotFoundComponent() {
   return (
@@ -106,6 +112,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <SplashOverlay />
         {children}
         <Scripts />
       </body>
@@ -115,13 +122,21 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const isOnboarding = ONBOARDING_PATHS.includes(path);
 
+  // QueryClientProvider and PantryProvider wrap BOTH branches so pantry data/localStorage is
+  // untouched and usePantry stays available everywhere, even while an onboarding page is shown.
   return (
     <QueryClientProvider client={queryClient}>
       <PantryProvider>
-        <AppShell>
+        {isOnboarding ? (
           <Outlet />
-        </AppShell>
+        ) : (
+          <AppShell>
+            <Outlet />
+          </AppShell>
+        )}
       </PantryProvider>
     </QueryClientProvider>
   );

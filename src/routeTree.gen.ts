@@ -12,9 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CookRouteImport } from './routes/cook'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as PantryRouteImport } from './routes/pantry'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as UseFirstRouteImport } from './routes/use-first'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,6 +34,11 @@ const InsightsRoute = InsightsRouteImport.update({
   path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PantryRoute = PantryRouteImport.update({
   id: '/pantry',
   path: '/pantry',
@@ -41,9 +49,19 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UseFirstRoute = UseFirstRouteImport.update({
   id: '/use-first',
   path: '/use-first',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -51,50 +69,82 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/cook': typeof CookRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/pantry': typeof PantryRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/use-first': typeof UseFirstRoute
+  '/welcome': typeof WelcomeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/cook': typeof CookRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/pantry': typeof PantryRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/use-first': typeof UseFirstRoute
+  '/welcome': typeof WelcomeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/cook': typeof CookRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/pantry': typeof PantryRoute
   '/settings': typeof SettingsRoute
+  '/signup': typeof SignupRoute
   '/use-first': typeof UseFirstRoute
+  '/welcome': typeof WelcomeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/cook' | '/insights' | '/pantry' | '/settings' | '/use-first'
+    | '/'
+    | '/cook'
+    | '/insights'
+    | '/login'
+    | '/pantry'
+    | '/settings'
+    | '/signup'
+    | '/use-first'
+    | '/welcome'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/cook' | '/insights' | '/pantry' | '/settings' | '/use-first'
+  to:
+    | '/'
+    | '/cook'
+    | '/insights'
+    | '/login'
+    | '/pantry'
+    | '/settings'
+    | '/signup'
+    | '/use-first'
+    | '/welcome'
   id:
     | '__root__'
     | '/'
     | '/cook'
     | '/insights'
+    | '/login'
     | '/pantry'
     | '/settings'
+    | '/signup'
     | '/use-first'
+    | '/welcome'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CookRoute: typeof CookRoute
   InsightsRoute: typeof InsightsRoute
+  LoginRoute: typeof LoginRoute
   PantryRoute: typeof PantryRoute
   SettingsRoute: typeof SettingsRoute
+  SignupRoute: typeof SignupRoute
   UseFirstRoute: typeof UseFirstRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -120,6 +170,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pantry': {
       id: '/pantry'
       path: '/pantry'
@@ -134,11 +191,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/use-first': {
       id: '/use-first'
       path: '/use-first'
       fullPath: '/use-first'
       preLoaderRoute: typeof UseFirstRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -148,9 +219,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CookRoute: CookRoute,
   InsightsRoute: InsightsRoute,
+  LoginRoute: LoginRoute,
   PantryRoute: PantryRoute,
   SettingsRoute: SettingsRoute,
+  SignupRoute: SignupRoute,
   UseFirstRoute: UseFirstRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

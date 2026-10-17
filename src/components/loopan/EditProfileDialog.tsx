@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Loader2, Trash2, Upload, UserRound, X } from "lucide-react";
+import { LogOut, Loader2, Trash2, Upload, UserRound, X } from "lucide-react";
+import { useRouter } from "@tanstack/react-router";
 import { useProfile } from "@/hooks/use-profile";
+import { useOnboarding } from "@/hooks/use-onboarding";
 import {
   AVATAR_PRESETS,
   validateProfileFields,
@@ -22,6 +24,8 @@ type Choice = "initial" | "photo" | PresetAvatarId;
 // starts from the stored profile and Batal / Escape / backdrop simply unmount and discard it.
 // Nothing reaches the store or localStorage until Simpan succeeds.
 function ProfileDialogBody({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
+  const { reset: resetOnboarding } = useOnboarding();
   const { profile, saveProfile } = useProfile();
   const [name, setName] = useState(profile.name);
   const [kitchen, setKitchen] = useState(profile.kitchen);
@@ -123,6 +127,14 @@ function ProfileDialogBody({ onClose }: { onClose: () => void }) {
       return;
     }
     onClose();
+  };
+
+  // Leaves the demo and returns to the opening flow. Clears ONLY the onboarding flag (its own
+  // key) — pantry and profile data are left untouched — then navigates to /welcome and closes.
+  const backToWelcome = () => {
+    resetOnboarding();
+    onClose();
+    router.navigate({ to: "/welcome" });
   };
 
   const ariaFor = (k: "name" | "kitchen") => ({
@@ -237,9 +249,20 @@ function ProfileDialogBody({ onClose }: { onClose: () => void }) {
 
           <div className="shrink-0 border-t px-6 py-4">
             {saveError && <p role="alert" className="mb-3 text-xs font-medium text-coral-foreground">{saveError}</p>}
-            <div className="flex justify-end gap-2">
-              <button type="button" onClick={onClose} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Batal</button>
-              <button type="submit" disabled={busy} className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-60">Simpan</button>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              {/* Exit the demo back to the opening flow. Touches only the onboarding key. */}
+              <button
+                type="button"
+                onClick={backToWelcome}
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-muted-foreground hover:bg-muted hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" />
+                Keluar demo
+              </button>
+              <div className="flex gap-2">
+                <button type="button" onClick={onClose} className="rounded-full border px-4 py-2 text-sm font-semibold hover:bg-muted">Batal</button>
+                <button type="submit" disabled={busy} className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-60">Simpan</button>
+              </div>
             </div>
           </div>
         </form>
