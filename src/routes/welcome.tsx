@@ -35,9 +35,10 @@ function Welcome() {
       <div className="mx-auto grid min-h-screen w-full max-w-6xl items-center gap-8 px-5 py-10 lg:grid-cols-2 lg:gap-12 lg:px-8">
         {/* Left: brand, headline, actions */}
         <div className="order-2 flex flex-col gap-6 lg:order-1">
-          <Link to="/" className="w-fit text-primary" aria-label="Loopan">
+          {/* Brand mark only — not a link: this IS the entry page, and linking to "/" would just bounce back here. */}
+          <span className="w-fit text-primary" aria-label="Loopan">
             <LoopanWordmark className="text-3xl font-extrabold leading-none tracking-tight text-primary" />
-          </Link>
+          </span>
 
           <div className="space-y-3">
             <h1 className="text-3xl font-extrabold leading-tight tracking-tight text-primary-deep sm:text-4xl">
