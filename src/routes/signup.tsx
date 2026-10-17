@@ -33,7 +33,7 @@ const schema = z
 type Form = { name: string; email: string; password: string; confirm: string };
 
 const field =
-  "h-11 w-full rounded-lg border bg-background px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-ring/40 aria-[invalid=true]:border-coral-foreground";
+  "h-10 w-full rounded-lg border bg-background px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-ring/40 aria-[invalid=true]:border-coral-foreground";
 
 function Signup() {
   const router = useRouter();
@@ -86,15 +86,15 @@ function Signup() {
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
       <div className="pointer-events-none absolute inset-0 bg-mint/40" aria-hidden="true" />
-      <div className="card-surface relative z-10 w-full max-w-md p-6 shadow-lift sm:p-8">
-        <div className="flex flex-col items-center gap-2 text-center">
+      <div className="card-surface relative z-10 w-full max-w-md p-5 shadow-lift sm:p-6">
+        <div className="flex flex-col items-center gap-1 text-center">
           <Link to="/" className="text-primary" aria-label="Loopan">
             <LoopanWordmark className="text-2xl font-extrabold leading-none tracking-tight text-primary" />
           </Link>
           <h1 className="text-xl font-semibold text-foreground">Buat profil Loopan</h1>
         </div>
 
-        <form noValidate onSubmit={submit} className="mt-6 grid gap-4">
+        <form noValidate onSubmit={submit} className="mt-5 grid gap-3">
           <div className="grid gap-1.5">
             <label htmlFor="signup-name" className="text-sm font-medium">
               Nama
@@ -171,14 +171,14 @@ function Signup() {
 
           <button
             type="submit"
-            className="mt-1 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+            className="mt-1 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-soft transition-colors hover:bg-primary-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
           >
             <UserPlus className="h-4 w-4" aria-hidden="true" />
             Daftar
           </button>
         </form>
 
-        <div className="mt-6 flex flex-col items-center gap-2 text-sm">
+        <div className="mt-4 flex flex-col items-center gap-1.5 text-sm">
           <p className="text-muted-foreground">
             Sudah punya akun?{" "}
             <Link to="/login" className="font-semibold text-primary hover:text-primary-deep">
