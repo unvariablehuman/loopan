@@ -215,7 +215,7 @@ export function UseFirstSection() {
   const extra = urgent.length - list.length; // urgent items not shown in the 3-card teaser
   return (
     <section className="card-surface flex flex-col p-5 sm:p-6">
-      <SectionHead icon={Hourglass} title="Prioritas Penggunaan" sub="Barang yang perlu segera diperhatikan." action={
+      <SectionHead icon={Hourglass} title="Prioritas Penggunaan" action={
         <Link to="/use-first" className="flex items-center gap-1 text-[13px] font-semibold text-primary hover:underline">Lihat semua <ArrowRight className="h-3.5 w-3.5" /></Link>
       } />
       <div className="mt-5">
@@ -286,7 +286,7 @@ export function ThisWeek() {
   const r = 52;
   return (
     <section className="card-surface p-5">
-      <SectionHead icon={BarChart3} title="Minggu ini" sub="Barang yang kamu tandai sudah digunakan (7 hari terakhir)" action={
+      <SectionHead icon={BarChart3} title="Minggu ini" action={
         <Link to="/insights" className="flex items-center gap-1 text-[13px] font-semibold text-primary hover:underline">Lihat statistik <ArrowRight className="h-3.5 w-3.5" /></Link>
       } />
       <div className="mt-5 grid grid-cols-[auto_minmax(0,1fr)] items-center gap-5">
@@ -318,7 +318,7 @@ export function BeforeYouShop() {
   const [list, setList] = useState(shopSeed);
   return (
     <section className="card-surface p-5">
-      <SectionHead icon={ShoppingCart} title="Sebelum Berbelanja" sub="Contoh daftar — ketuk untuk mengubah." action={<DemoTag />} />
+      <SectionHead icon={ShoppingCart} title="Sebelum Berbelanja" action={<DemoTag />} />
       <ul className="mt-4 grid gap-2">
         {list.map((i) => (
           <li key={i.id}>
