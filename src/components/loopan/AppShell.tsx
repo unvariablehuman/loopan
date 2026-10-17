@@ -149,13 +149,18 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
 
       {/* Mobile bottom nav: all five destinations in equal cells (quick thumb reach). */}
-      <nav aria-label="Utama" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-card/95 px-2 py-2 backdrop-blur lg:hidden">
+      <nav aria-label="Utama" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-card/95 px-1 pb-[max(0.375rem,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur lg:hidden">
         {nav.map((n) => {
           const active = path === n.to;
           return (
-            <Link key={n.to} to={n.to} aria-current={active ? "page" : undefined} className={`flex min-w-0 flex-col items-center gap-1 rounded-lg py-1.5 text-[11px] font-medium ${active ? "text-primary" : "text-muted-foreground"}`}>
+            <Link
+              key={n.to}
+              to={n.to}
+              aria-current={active ? "page" : undefined}
+              className={`flex min-w-0 flex-col items-center gap-1 rounded-lg px-0.5 py-1.5 transition-colors ${active ? "text-primary" : "text-muted-foreground"}`}
+            >
               <n.icon className="h-5 w-5 shrink-0" />
-              <span className="max-w-full truncate">{n.label}</span>
+              <span className="w-full truncate text-center text-[10px] font-medium leading-tight">{n.label}</span>
             </Link>
           );
         })}
@@ -229,7 +234,8 @@ function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <Link to="/" className="shrink-0 text-primary lg:hidden" aria-label="Beranda Loopan"><LoopanWordmark className="text-xl font-extrabold leading-none tracking-tight text-primary" /></Link>
+        {/* Hidden on the narrowest phones so the search field gets room; the menu button + the drawer already carry the brand. */}
+        <Link to="/" className="hidden shrink-0 text-primary sm:inline-flex lg:hidden" aria-label="Beranda Loopan"><LoopanWordmark className="text-xl font-extrabold leading-none tracking-tight text-primary" /></Link>
         <div className="relative w-full max-w-xl">
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
