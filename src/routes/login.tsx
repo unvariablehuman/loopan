@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { z } from "zod";
+import loginBg from "@/assets/1.jpg";
 import { LoopanWordmark } from "@/components/loopan/Logo";
 import { useOnboarding } from "@/hooks/use-onboarding";
 
@@ -61,8 +62,19 @@ function Login() {
     ) : null;
 
   return (
-    <div className="grid min-h-screen w-full place-items-center bg-sage px-5 py-10">
-      <div className="card-surface w-full max-w-md p-6 sm:p-8">
+    <div className="relative grid min-h-screen w-full place-items-center overflow-hidden bg-mint px-5 py-10">
+      {/* Decorative pantry photo behind the card. It's a JPG (no transparency), so a soft cream
+          wash sits on top to keep the white card and text readable; the brand mint shows through. */}
+      <img
+        src={loginBg}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-mint/80 backdrop-blur-[2px]" aria-hidden="true" />
+      <div className="card-surface relative z-10 w-full max-w-md p-6 shadow-lift sm:p-8">
         <div className="flex flex-col items-center gap-2 text-center">
           <Link to="/" className="text-primary" aria-label="Loopan">
             <LoopanWordmark className="text-2xl font-extrabold leading-none tracking-tight text-primary" />
