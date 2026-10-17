@@ -75,9 +75,6 @@ function Welcome() {
             </button>
           </div>
 
-          <p className="text-xs text-muted-foreground">
-            Akun masih dalam mode demo. Loopan belum terhubung ke layanan akun apa pun.
-          </p>
         </div>
 
         {/* Right: everyday-grocery visual */}
