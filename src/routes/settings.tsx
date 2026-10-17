@@ -30,7 +30,7 @@ function SettingsPage() {
   const handle = (res: { ok: true } | { ok: false; error: string }) => setError(res.ok ? null : res.error);
   return (
     <section className="card-surface max-w-2xl p-5 sm:p-6">
-      <SectionHead icon={Settings} title="Pengaturan" sub="Pengingat masih berupa pratinjau; preferensi resep langsung tersimpan." />
+      <SectionHead icon={Settings} title="Pengaturan" />
       <ul className="mt-5 divide-y">
         {opts.map((o) => (
           <li key={o.id} className="flex items-center justify-between gap-4 py-4">
