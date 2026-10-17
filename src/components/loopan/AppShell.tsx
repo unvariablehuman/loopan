@@ -121,7 +121,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             ) : (
               <div className="min-w-0">
                 <LoopanWordmark />
-                <div className="mt-1 text-xs text-muted-foreground">Jaga Makanan Tetap dalam Putaran</div>
+                <div className="mt-1 text-xs text-muted-foreground">Manfaatkan yang Ada, Jangan Sia-siakan.</div>
               </div>
             )}
           </Link>

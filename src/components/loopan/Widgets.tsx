@@ -38,7 +38,7 @@ export function HeroCard() {
           <Leaf className="h-7 w-7 text-primary" />
           <h1 className="text-[28px] font-extrabold tracking-tight sm:text-[34px]">Selamat pagi!</h1>
         </div>
-        <p className="mt-2 text-[15px] text-foreground/80">Mari jaga makananmu tetap dalam putaran.</p>
+        <p className="mt-2 text-[15px] text-foreground/80">Yuk, kelola isi dapurmu dan manfaatkan makanan sebelum terbuang.</p>
         <div className="mt-6 flex flex-col gap-4 rounded-xl bg-card p-4 shadow-soft 2xl:flex-row 2xl:items-center">
           <div className="flex min-w-0 flex-1 items-center gap-3">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-mint text-primary"><Camera className="h-6 w-6" /></span>
@@ -270,7 +270,7 @@ export function PantryGlance() {
           <div className="min-w-0">
             {/* whitespace-nowrap keeps "Rp 16.004" on one line; the row spans the whole card, so there is room. */}
             <div className="whitespace-nowrap text-lg font-bold">{ready ? formatPrice(value) : "–"}</div>
-            <div className="text-xs text-muted-foreground">estimasi nilai berisiko</div>
+            <div className="text-xs text-muted-foreground">Perkiraan nilai barang prioritas</div>
           </div>
         </div>
       </div>

@@ -4,9 +4,9 @@ import { BeforeYouShop, HeroCard, PantryGlance, ThisWeek, UseFirstSection } from
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Loopan — Jaga Makanan Tetap dalam Putaran" },
+      { title: "Loopan — Manfaatkan yang Ada, Jangan Sia-siakan" },
       { name: "description", content: "Lacak belanjaan, pantau tanggal kedaluwarsa, dan kurangi pemborosan makanan dengan dasbor dapur pintar Loopan." },
-      { property: "og:title", content: "Loopan — Jaga Makanan Tetap dalam Putaran" },
+      { property: "og:title", content: "Loopan — Manfaatkan yang Ada, Jangan Sia-siakan" },
       { property: "og:description", content: "Dasbor dapur pintar yang membantu rumah tangga mengurangi pemborosan makanan." },
     ],
   }),

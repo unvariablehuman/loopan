@@ -42,7 +42,7 @@ describe("PantryGlance", () => {
     expect(screen.getByText("barang").previousElementSibling).toHaveTextContent("3");
     expect(screen.getByText("segera kedaluwarsa").previousElementSibling).toHaveTextContent("2");
 
-    const valueEl = screen.getByText("estimasi nilai berisiko").previousElementSibling as HTMLElement;
+    const valueEl = screen.getByText("Perkiraan nilai barang prioritas").previousElementSibling as HTMLElement;
     // Compare ignoring whitespace: Intl inserts a non-breaking space after "Rp".
     expect(valueEl.textContent?.replace(/\s/g, "")).toBe(formatPrice(16000).replace(/\s/g, ""));
   });
@@ -50,7 +50,7 @@ describe("PantryGlance", () => {
   it("keeps the Rupiah amount on a single line (it must not be broken mid-number)", () => {
     mockItems = [makeItem("big", day(1), 100_000_000)];
     render(<PantryGlance />);
-    const valueEl = screen.getByText("estimasi nilai berisiko").previousElementSibling as HTMLElement;
+    const valueEl = screen.getByText("Perkiraan nilai barang prioritas").previousElementSibling as HTMLElement;
     // jsdom cannot measure layout, so assert the class that prevents the wrap.
     expect(valueEl).toHaveClass("whitespace-nowrap");
     expect(valueEl.className).not.toContain("overflow-wrap:anywhere");
