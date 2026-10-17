@@ -42,7 +42,13 @@ function load(): Stored | null {
     if (!raw) return null;
     const s = JSON.parse(raw) as Stored;
     if (!Array.isArray(s.items)) return null;
-    return { items: s.items.filter((i) => i && typeof i.id === "string" && typeof i.name === "string"), used: Array.isArray(s.used) ? s.used : [] };
+    const items = s.items.filter((i) => i && typeof i.id === "string" && typeof i.name === "string");
+    const used = Array.isArray(s.used) ? s.used : [];
+    // Treat a completely empty store (no items AND no usage history) as "nothing saved yet" so the
+    // caller falls back to makeSeed(). Without this, a previously-persisted empty object would stick
+    // forever and the demo items (with their images) would never appear.
+    if (items.length === 0 && used.length === 0) return null;
+    return { items, used };
   } catch {
     return null;
   }
