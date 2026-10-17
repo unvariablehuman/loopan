@@ -34,7 +34,7 @@ function Pantry() {
 
   return (
     <section className="card-surface p-5 sm:p-6">
-      <SectionHead icon={Package} title="Dapur Saya" sub={ready ? `${items.length} barang terlacak` : "Memuat…"} action={
+      <SectionHead icon={Package} title="Dapur Saya" action={
         <button onClick={() => openEditor({ mode: "add" })} className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-[13px] font-semibold text-primary-foreground hover:bg-primary-deep"><Plus className="h-4 w-4" />Tambah item</button>
       } />
 

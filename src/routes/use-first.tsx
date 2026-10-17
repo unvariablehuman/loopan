@@ -25,7 +25,7 @@ function UseFirst() {
   const rest = items.filter((i) => !isUrgent(i.expiresOn)).sort(byPriority);
   return (
     <section className="card-surface p-5 sm:p-6">
-      <SectionHead icon={Hourglass} title="Prioritas Penggunaan" sub="Yang paling cepat kedaluwarsa muncul lebih dulu — habiskan ini sebelum yang lain." />
+      <SectionHead icon={Hourglass} title="Prioritas Penggunaan" />
       <div className="mt-5">
         {!ready ? <div className="h-64 animate-pulse rounded-xl bg-mint/60" /> : items.length === 0 ? (
           <EmptyState title="Tidak ada yang perlu dihabiskan" text="Dapurmu masih kosong. Tambahkan barang untuk melihat prioritasnya." action={

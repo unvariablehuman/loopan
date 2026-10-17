@@ -84,7 +84,7 @@ function Cook() {
 
   return (
     <section className="card-surface p-5 sm:p-6">
-      <SectionHead icon={ChefHat} title="Masak dengan Loopan" sub="Resep yang bisa kamu masak dari isi dapurmu — yang memakai bahan segera kedaluwarsa muncul lebih dulu." />
+      <SectionHead icon={ChefHat} title="Masak dengan Loopan" />
       <div className="mt-5">
         {!ready ? (
           <div className="h-64 animate-pulse rounded-xl bg-mint/60" />
