@@ -2,7 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { toast } from "sonner";
 import { makeSeed, type PantryItem } from "@/lib/pantry-data";
 
-const KEY = "loopan.pantry.v1";
+// v2: bumped so first load ignores older demo data (which lacked seed images) and re-seeds
+// from makeSeed(). Users with their own saved items under v1 start fresh once; this is demo data.
+const KEY = "loopan.pantry.v2";
 
 export interface UsedEntry { id: string; name: string; price?: number | undefined; usedAt: string }
 interface Stored { items: PantryItem[]; used: UsedEntry[] }
