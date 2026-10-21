@@ -43,13 +43,21 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
         if (imgRes.ok) {
           const blob = await imgRes.blob();
           const buf = await blob.arrayBuffer();
-          const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
-          const dataUrl = `data:${blob.type};base64,${b64}`;
-          product.image = dataUrl;
+          const bytes = new Uint8Array(buf);
+          // btoa(String.fromCharCode(...bytes)) blows the call-stack for buffers > ~64 KB.
+          // Use a chunked approach instead.
+          let b64 = "";
+          const CHUNK = 8192;
+          for (let i = 0; i < bytes.length; i += CHUNK) {
+            b64 += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+          }
+          product.image = `data:${blob.type};base64,${btoa(b64)}`;
         } else {
           product.image = undefined;
         }
-      } catch {
+      } catch (imgErr) {
+        // Re-throw AbortError so the outer catch can propagate cancellation correctly.
+        if ((imgErr as Error).name === "AbortError") throw imgErr;
         product.image = undefined;
       }
     }
