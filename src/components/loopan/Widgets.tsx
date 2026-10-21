@@ -164,12 +164,14 @@ function ItemDetailDialog({ item, onClose }: { item: PantryItem | null; onClose:
 // per card and no nested interactive elements (the status badge sits above it via z-index).
 export function ProductCard({ p }: { p: PantryItem }) {
   const [detail, setDetail] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  useEffect(() => { setImgError(false); }, [p.image]);
   const tone = p.tone ?? autoTone[statusOf(daysLeft(p.expiresOn))];
   return (
     <article className={`group relative flex flex-col overflow-hidden rounded-2xl border ${toneBg[tone]} transition focus-within:-translate-y-0.5 focus-within:shadow-lift hover:-translate-y-0.5 hover:shadow-lift`}>
       <div className="relative aspect-[4/3] overflow-hidden">
-        {p.image ? (
-          <img src={p.image} alt={p.name} loading="lazy" width={944} height={704} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" />
+        {p.image && !imgError ? (
+          <img src={p.image} alt={p.name} loading="lazy" width={944} height={704} className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]" onError={() => setImgError(true)} />
         ) : (
           <div className="grid h-full place-items-center text-primary/40"><Leaf className="h-10 w-10" /></div>
         )}

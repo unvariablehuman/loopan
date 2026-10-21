@@ -29,13 +29,30 @@ export async function lookupBarcode(code: string, signal?: AbortSignal): Promise
     const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
     const tags = Array.isArray(p["categories_tags"]) ? (p["categories_tags"] as string[]).join(" ") : "";
     const category = CAT_RULES.find(([re]) => re.test(tags))?.[1];
+    const imageUrl = str(p["image_front_small_url"]) ?? str(p["image_url"]);
     const product: OffProduct = {
       name: str(p["product_name"]) ?? str(p["product_name_en"]),
       brand: str(p["brands"])?.split(",")[0]?.trim(),
-      image: str(p["image_front_small_url"]) ?? str(p["image_url"]),
+      image: imageUrl,
       category,
     };
     if (!product.name && !product.brand) return { status: "not_found" };
+    if (imageUrl) {
+      try {
+        const imgRes = await fetch(imageUrl, { signal: signal ?? undefined });
+        if (imgRes.ok) {
+          const blob = await imgRes.blob();
+          const buf = await blob.arrayBuffer();
+          const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+          const dataUrl = `data:${blob.type};base64,${b64}`;
+          product.image = dataUrl;
+        } else {
+          product.image = undefined;
+        }
+      } catch {
+        product.image = undefined;
+      }
+    }
     return { status: "found", product };
   } catch (e) {
     if ((e as Error).name === "AbortError") throw e;
