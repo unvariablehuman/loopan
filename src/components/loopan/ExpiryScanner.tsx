@@ -13,6 +13,32 @@ type Phase =
   | { k: "done"; text: string; dates: DateCandidate[] }
   | { k: "error"; msg: string };
 
+/** Load an image file, scale it down (longest side ≤ 1024px), and return a JPEG data URL
+ *  small enough to persist inside the pantry item (localStorage-friendly). */
+async function downscaleToDataUrl(file: File, max = 1024, quality = 0.8): Promise<string> {
+  const url = URL.createObjectURL(file);
+  try {
+    const bmp = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image();
+      el.onload = () => resolve(el);
+      el.onerror = () => reject(new Error("image load failed"));
+      el.src = url;
+    });
+    const scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const w = Math.max(1, Math.round(bmp.width * scale));
+    const h = Math.max(1, Math.round(bmp.height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("no 2d context");
+    ctx.drawImage(bmp, 0, 0, w, h);
+    return canvas.toDataURL("image/jpeg", quality);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
 export function ExpiryScanner() {
   const { scanner, openScanner } = usePantry();
   if (scanner !== "expiry") return null;
@@ -22,6 +48,7 @@ export function ExpiryScanner() {
 function Inner({ close: onClose }: { close: () => void }) {
   const { openScanner, openEditor } = usePantry();
   const [img, setImg] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>({ k: "pick" });
   const [date, setDate] = useState("");
   const [dateType, setDateType] = useState<DateType>("use_by");
@@ -52,6 +79,7 @@ function Inner({ close: onClose }: { close: () => void }) {
     }
     const url = URL.createObjectURL(file);
     setImg(url);
+    void downscaleToDataUrl(file).then(setPhoto).catch(() => setPhoto(null));
     setPhase({ k: "reading", progress: 0 });
     try {
       const { createWorker } = await import("tesseract.js");
@@ -411,6 +439,7 @@ function Inner({ close: onClose }: { close: () => void }) {
                 onClick={() => {
                   stopRef.current();
                   setImg(null);
+                  setPhoto(null);
                   setPhase({ k: "pick" });
                   setDate("");
                 }}
@@ -439,7 +468,10 @@ function Inner({ close: onClose }: { close: () => void }) {
               disabled={!valid || reading}
               onClick={() => {
                 openScanner(null);
-                openEditor({ mode: "add", prefill: { expiresOn: date, dateType } });
+                openEditor({
+                  mode: "add",
+                  prefill: { expiresOn: date, dateType, image: photo ?? undefined },
+                });
               }}
               className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary-deep disabled:opacity-50"
             >
